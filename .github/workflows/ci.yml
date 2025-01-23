@@ -86,6 +86,14 @@ jobs:
         run: |
           echo SDKROOT=$(xcrun --sdk macosx --show-sdk-path) >> $GITHUB_ENV
 
+      # Note: gcc-10 is the latest on Ubuntu 20.04. If the runner is updated to
+      # a newer Ubuntu, this should be updated to the latest gcc arm64 cross
+      # compiler in that Ubuntu version.
+      - if: matrix.target.goos == 'linux' && matrix.target.goarch == 'arm64'
+        run: |
+          sudo apt update && sudo apt-get install -y gcc-10-aarch64-linux-gnu
+          echo CC=aarch64-linux-gnu-gcc-10 >> $GITHUB_ENV
+
       - run: |
           go build -v .
         env:
